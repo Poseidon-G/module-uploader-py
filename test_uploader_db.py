@@ -1,4 +1,4 @@
-import module_uploader
+import uploader
 from datetime import datetime
 
 plate_recognize = {
@@ -47,7 +47,7 @@ video_record = {
 }
 
 
-module_uploader.save_vehicle_detect(plate_recognize, "1234")
+uploader.save_vehicle_detect(plate_recognize, "1234")
 
 # from bson.objectid import ObjectId
 

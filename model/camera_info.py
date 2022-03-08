@@ -5,19 +5,15 @@ from bson.objectid import ObjectId
 from datetime import datetime
 from enum import Enum
 
-
-class TypeURLStreamEnum(Enum):
+class StreamTypes(Enum):
     YOUTUBE = "YOUTUBE",
     RTSP = "RTSP"
-    
-
-
 
 class CameraInfos(Document):
     uuid = StringField(required=True, default=str(ObjectId()))
     camera_name = StringField(required=True)
     camera_url = StringField(required=True)
-    type_url_stream: EnumField(TypeURLStreamEnum,required= True)
+    type_url_stream: EnumField(StreamTypes,required= True)
     address = DictField(default = {
         "lat": 0,
         "long": 0,

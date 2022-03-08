@@ -1,18 +1,16 @@
 from mongoengine import connect
 import config
 connect(host=config.MONGODB_URI)
-import cloudinary_module
+import cloudinary
 
-from camera_info_model import CameraInfos
-from images_model import Images
-from record_videos_model import RecordVideos
-from vehicle_detects_model import VehicleDetects
-
-
+from db_uploader.model.camera_info import CameraInfos
+from db_uploader.model.images import Images
+from db_uploader.model.record_videos import RecordVideos
+from db_uploader.model.vehicle_detects import VehicleDetects
 
 def save_image_get_uuid(image, link_folder):
     try:
-        response_image = cloudinary_module.upload_image(image, link_folder)
+        response_image = cloudinary.upload_image(image, link_folder)
         image_data = Images(
             asset_id = response_image["asset_id"],
             public_id = response_image["public_id"],

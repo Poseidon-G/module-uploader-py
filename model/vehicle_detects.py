@@ -16,7 +16,7 @@ def _check_valid_possible_plates(input):
         raise ValidationError("invalid possible_plates_format")
 
 
-class VehicleTypeEnum(Enum):
+class VehicleTypes(Enum):
     CAR = "CAR"
     MOTORCYCLE = "MOTORCYCLE"
     BUS = "BUS"
@@ -45,7 +45,7 @@ class VehicleDetects(Document):
     """
     possible_plates = ListField(DictField(), default = list, validation = _check_valid_possible_plates )
     preview_image_id = StringField(required = True)
-    vehicle_type = EnumField(VehicleTypeEnum,required = True)
+    vehicle_type = EnumField(VehicleTypes,required = True)
     updated_at = DateTimeField(default=datetime.now)
     created_at = DateTimeField(default=datetime.now)
     def save(self, *args, **kwargs):

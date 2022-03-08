@@ -3,10 +3,10 @@ import config
 connect(host=config.MONGODB_URI)
 import cloudinary
 
-from db_uploader.model.camera_info import CameraInfos
-from db_uploader.model.images import Images
-from db_uploader.model.record_videos import RecordVideos
-from db_uploader.model.vehicle_detects import VehicleDetects
+from model.camera_info import CameraInfos
+from model.images import Images
+from model.record_videos import RecordVideos
+from model.vehicle_detects import VehicleDetects
 
 def save_image_get_uuid(image, link_folder):
     try:

@@ -24,11 +24,8 @@ def save_image_get_uuid(image, link_folder):
         print(e)
         print("upload failed")
 
-
-
 def save_video_get_uuid(video_record):
-    try:
-        
+    try:        
         video_data = RecordVideos(
             video_url = video_record["video_url"],
             width = video_record["width"],

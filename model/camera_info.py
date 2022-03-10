@@ -21,7 +21,7 @@ class CameraInfos(Document):
     })
     status = BooleanField(required=True, default=False)
     roi = ListField(ListField(IntField()), default=[], required=True)
-    direction_vector = ListField(ListField(IntField()), max_length=2, default=[], required=True)
+    direction_vector = ListField(ListField(IntField()), max_length=2, default=[0,0], required=True)
     updated_at = DateTimeField(default=datetime.now)
     created_at = DateTimeField(default=datetime.now)
     def save(self, *args, **kwargs):

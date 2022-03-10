@@ -1,6 +1,5 @@
 import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+from cloudinary.uploader import upload, destroy
 from config import CLOUDINARY_STORAGE
 
 cloudinary.config( 
@@ -12,10 +11,10 @@ cloudinary.config(
 #tk: luc22082000@gmail.com
 # mk: Dkmconcho1
 #upload image to cloudinary
-def upload_image(_linkImage, _folder):
-  return cloudinary.uploader.upload(_linkImage, folder = _folder)
+def upload_image(image_base64: str, folder: str):
+  return upload(image_base64, folder = folder)
 
 def remove_image_id(_publicId):
-  return cloudinary.uploader.destroy(_publicId)
+  return destroy(_publicId)
 
 

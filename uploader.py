@@ -1,16 +1,26 @@
 from mongoengine import connect
-import config
-connect(host=config.MONGODB_URI)
-import cloudinary
+from mongoengine.errors import ValidationError
 
+import config
+from db_uploader.schema import UploadInfo
+
+connect(host=config.MONGODB_URI)
+from typing import Dict, List
+
+import cloudinary_upload
 from model.camera_info import CameraInfos
 from model.images import Images
 from model.record_videos import RecordVideos
-from model.vehicle_detects import VehicleDetects
+from model.vehicle_detects import Vehicles
 
-def save_image_get_uuid(image, link_folder):
+
+def save_image(image_b64: str, link_folder: str):
+    """Upload image in JPEG base 64 format to Cloudinary, then upload Image data to Mongo Db
+    Return:
+        (str): Document's UUID
+    """
     try:
-        response_image = cloudinary.upload_image(image, link_folder)
+        response_image = cloudinary_upload.upload_image(image_b64, link_folder)
         image_data = Images(
             asset_id = response_image["asset_id"],
             public_id = response_image["public_id"],
@@ -20,66 +30,57 @@ def save_image_get_uuid(image, link_folder):
         ).save()
         
         return str(image_data.uuid)
-    except Exception as e: 
-        print(e)
-        print("upload failed")
+    except Exception as exp: 
+        print(exp.with_traceback())
+        return None
 
-def save_video_get_uuid(video_record):
+def save_video_get_uuid(video_record: RecordVideos):
     try:        
-        video_data = RecordVideos(
-            video_url = video_record["video_url"],
-            width = video_record["width"],
-            height = video_record["height"],
-            fps = video_record["fps"],
-            num_frames = video_record["num_frames"],
-            camera_id =  video_record["camera_id"]
-        ).save()
-
+        video_record.validate()
+        video_data:RecordVideos = video_record.save()
         return str(video_data.uuid)
-    except:
-        print("video failed")
+    except ValidationError:
+        raise Exception("Recorded video data format is incorrect")
 
-
-def save_vehicle_detect(plate_recognize, video_id):
+def save_vehicle_info(vehicle_info: UploadInfo, video_id: str):
     try:
-        list_vehicle_id_images = []
-        list_plate_id_images = []
+        vehicle_image_ids: List[str] = []
+        lp_image_ids: List[str] = []
 
-        for vehicle in plate_recognize["list_vehicle_images"]:
-            list_vehicle_id_images.append(save_image_get_uuid(vehicle["image"], vehicle["folder"]))
+        for vehicle_image_data in vehicle_info.vehicle_images:
+            vehicle_image_ids.append(save_image(vehicle_image_data.jpeg_base64, vehicle_image_data.folder))
 
-        for plate in plate_recognize["list_plate_images"]:
-            list_plate_id_images.append(save_image_get_uuid(plate["image"], plate["folder"]))
+        for lp_image_data in vehicle_info.lp_images:
+            lp_image_ids.append(save_image(lp_image_data.jpeg_base64, lp_image_data.folder))
+
+        preview_image_id  = save_image(vehicle_info.preview_image.jpeg_base64, vehicle_info.preview_image.folder)
         
-
-        preview_image_id  = save_image_get_uuid(plate_recognize["preview_image"]["image"], plate_recognize["preview_image"]["folder"])
-        
-        data = VehicleDetects(
-            camera_uuid = plate_recognize["camera_id"],
-            vehicle_image_ids = list_vehicle_id_images,
-            plate_image_ids = list_plate_id_images,
+        data = Vehicles(
+            camera_uuid = vehicle_info.camera_id,
+            vehicle_image_ids = vehicle_image_ids,
+            plate_image_ids = lp_image_ids,
             video_id = video_id,
-            record_time = plate_recognize["record_time"],
-            start_frame = plate_recognize["start_frame"],
-            end_frame = plate_recognize["end_frame"],
-            possible_plates = plate_recognize["possible_plates"],
+            record_time = vehicle_info.record_time,
+            start_frame = vehicle_info.start_frame,
+            end_frame = vehicle_info.end_frame,
+            lp_labels = vehicle_info.lp_labels,
             preview_image_id = preview_image_id,
-            vehicle_type = plate_recognize["vehicle_type"]
+            vehicle_type = vehicle_info.type
         )
         data.save()
-        print("upload save_vehicle_detect success")
-    except Exception as e: 
-        print(e)
-        print("fail upload save_vehicle_detect")
+        return True
+    except ValidationError as e: 
+        print("Data format is incorrect")
+        return False
 
-def upload_list_vehicle_detect(list_upload, record_video):
+def upload_list_vehicle_detect(list_upload: Dict[int, UploadInfo], record_video: RecordVideos):
     try:
         video_uuid = save_video_get_uuid(record_video)
 
         for vehicle_id in list_upload.keys():
-            save_vehicle_detect(list_upload[vehicle_id], video_uuid)
-
-        print("upload list_vehicle_detect success")
+            flag = save_vehicle_info(list_upload[vehicle_id], video_uuid)
+            if not flag:
+                print(f"Upload #{vehicle_id} vehicle info failed!")
+        return True
     except:
-        print("upload list_vehicle_detect failed")
-
+        return False

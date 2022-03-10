@@ -47,7 +47,7 @@ video_record = {
 }
 
 
-uploader.save_vehicle_detect(plate_recognize, "1234")
+uploader.save_vehicle_info(plate_recognize, "1234")
 
 # from bson.objectid import ObjectId
 

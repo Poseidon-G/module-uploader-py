@@ -2,7 +2,7 @@ from mongoengine import connect
 from mongoengine.errors import ValidationError
 
 import config
-from db_uploader.schema import UploadInfo
+from db_uploader.schema import UploadVehicleInfo
 
 connect(host=config.MONGODB_URI)
 from typing import Dict, List
@@ -11,7 +11,7 @@ import cloudinary_upload
 from model.camera_info import CameraInfos
 from model.images import Images
 from model.record_videos import RecordVideos
-from model.vehicle_detects import Vehicles
+from db_uploader.model.vehicle import Vehicles
 
 
 def save_image(image_b64: str, link_folder: str):
@@ -42,7 +42,7 @@ def save_video_get_uuid(video_record: RecordVideos):
     except ValidationError:
         raise Exception("Recorded video data format is incorrect")
 
-def save_vehicle_info(vehicle_info: UploadInfo, video_id: str):
+def save_vehicle_info(vehicle_info: UploadVehicleInfo, video_id: str):
     try:
         vehicle_image_ids: List[str] = []
         lp_image_ids: List[str] = []
@@ -71,9 +71,10 @@ def save_vehicle_info(vehicle_info: UploadInfo, video_id: str):
         return True
     except ValidationError as e: 
         print("Data format is incorrect")
+        print(e.with_traceback())
         return False
 
-def upload_list_vehicle_detect(list_upload: Dict[int, UploadInfo], record_video: RecordVideos):
+def upload_list_vehicle_detect(list_upload: Dict[int, UploadVehicleInfo], record_video: RecordVideos):
     try:
         video_uuid = save_video_get_uuid(record_video)
 

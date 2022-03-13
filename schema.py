@@ -5,7 +5,7 @@ from typing import List, Dict
 from numpy import ndarray
 from base64 import b64encode
 from cv2 import imencode
-from model.vehicle_detects import VehicleTypes
+from db_uploader.model.vehicle import VehicleTypes
 
 _JPG_BASE64_HEADER="data:image/jpeg;base64,"
 _JPG_EXT=".jpg"
@@ -20,7 +20,7 @@ class UploadImage:
         return _JPG_BASE64_HEADER+b64encode(imencode(_JPG_EXT, bgr_img)[1]).decode("utf-8") 
 
 @dataclass
-class UploadInfo:
+class UploadVehicleInfo:
     vehicle_images: List[UploadImage]
     lp_images: List[UploadImage]
     lp_labels: Dict[str, float]

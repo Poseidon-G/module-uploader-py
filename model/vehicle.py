@@ -5,11 +5,11 @@ from datetime import datetime
 from enum import Enum
 
 class VehicleTypes(Enum):
-    CAR = "CAR"
-    MOTORCYCLE = "MOTORCYCLE"
-    BUS = "BUS"
-    TRUCK = "TRUCK"
-    BICYCLE = "BICYCLE"
+    CAR = "Car"
+    MOTORCYCLE = "Motorcycle"
+    BUS = "Bus"
+    TRUCK = "Truck"
+    BICYCLE = "Bicycle"
 
 class Vehicles(Document):
     uuid = StringField(required = True, default = str(ObjectId()))

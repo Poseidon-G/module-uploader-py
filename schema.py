@@ -30,3 +30,4 @@ class UploadVehicleInfo:
     preview_image: UploadImage
     camera_id: str
     type: VehicleTypes
+    

@@ -1,3 +1,4 @@
+from email.policy import default
 from mongoengine.document import Document
 from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField, IntField
 from bson.objectid import ObjectId
@@ -19,7 +20,7 @@ class Vehicles(Document):
     vehicle_image_ids = ListField(StringField(), default = list)
     plate_image_ids = ListField(StringField(), default = list)
     preview_image_id = StringField(required = True)
-    lp_labels = DictField(required=True) # Dict[str, float]: {label: score}
+    lp_labels = ListField(DictField(), default=[], requrired=True) # [{label: str, score:float}]
     vehicle_type = EnumField(VehicleTypes,required = True)
     
     record_time = DateTimeField(required= True)

@@ -37,8 +37,6 @@ class CameraInfos(Document):
     def get_by_alias(camera_alias: str):
         try:
             result: CameraInfos = CameraInfos.objects(camera_alias=camera_alias).first()
-            print(result)
             return result
-        except Exception as e:
-            print(e)
+        except Exception:
             return None

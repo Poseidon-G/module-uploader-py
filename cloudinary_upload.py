@@ -1,6 +1,6 @@
 import cloudinary
 from cloudinary.uploader import upload, destroy
-from config import CLOUDINARY_STORAGE
+from .config import CLOUDINARY_STORAGE
 
 cloudinary.config( 
   cloud_name = CLOUDINARY_STORAGE["CLOUD_NAME"], 

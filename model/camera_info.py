@@ -22,8 +22,8 @@ class CameraInfos(Document):
         "name": ""
     })
     status = BooleanField(required=True, default=False)
-    roi = ListField(ListField(IntField(), max_length=2), default=[], required=True)
-    lp_roi = ListField(ListField(IntField(), max_length=2), default=[])
+    roi_points = ListField(ListField(IntField(), max_length=2), default=[], required=True)
+    lp_roi_points = ListField(ListField(IntField(), max_length=2), default=[])
     direction_vector = ListField(IntField(), max_length=2, default=[0,0], required=True)
     updated_at = DateTimeField(default=datetime.now)
     created_at = DateTimeField(default=datetime.now)
@@ -36,7 +36,9 @@ class CameraInfos(Document):
     @staticmethod
     def get_by_alias(camera_alias: str):
         try:
-            result: CameraInfos = CameraInfos.objects.get(camera_alias=camera_alias)
+            result: CameraInfos = CameraInfos.objects(camera_alias=camera_alias).first()
+            print(result)
             return result
-        except Exception:
+        except Exception as e:
+            print(e)
             return None

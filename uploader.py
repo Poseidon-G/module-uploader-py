@@ -1,18 +1,17 @@
 from mongoengine import connect
 from mongoengine.errors import ValidationError
 
-import config
+from db_uploader.config import MONGODB_URI
 from db_uploader.schema import UploadVehicleInfo
 
-connect(host=config.MONGODB_URI)
+connect(host=MONGODB_URI)
 from typing import Dict, List
 
-import cloudinary_upload
-from model.camera_info import CameraInfos
-from model.images import Images
-from model.record_videos import RecordVideos
+from db_uploader import cloudinary_upload
+from db_uploader.model.camera_info import CameraInfos
+from db_uploader.model.images import Images
+from db_uploader.model.record_videos import RecordVideos
 from db_uploader.model.vehicle import Vehicles
-
 
 def save_image(image_b64: str, link_folder: str):
     """Upload image in JPEG base 64 format to Cloudinary, then upload Image data to Mongo Db

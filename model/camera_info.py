@@ -34,9 +34,9 @@ class CameraInfos(Document):
         return super(CameraInfos, self).save(*args, **kwargs)
 
     @staticmethod
-    def get_by_name(camera_name: str):
+    def get_by_alias(camera_alias: str):
         try:
-            result: CameraInfos = CameraInfos.objects.get(camera_name=camera_name)
+            result: CameraInfos = CameraInfos.objects.get(camera_alias=camera_alias)
             return result
         except Exception:
             return None

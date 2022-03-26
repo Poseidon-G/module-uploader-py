@@ -1,4 +1,5 @@
 from random import choice
+from tokenize import String
 from mongoengine.document import Document, QuerySet
 from mongoengine.fields import EnumField, BooleanField, ListField,StringField, DateTimeField, DictField, IntField
 from bson.objectid import ObjectId
@@ -12,8 +13,9 @@ class StreamingTypes(Enum):
 class CameraInfos(Document):
     uuid = StringField(required=True, default=str(ObjectId()))
     camera_name = StringField(required=True)
+    camera_alias = StringField(required=True)
     camera_url = StringField(required=True)
-    streaming_type: EnumField(StreamingTypes,required= True)
+    streaming_type = EnumField(StreamingTypes,required= True)
     address = DictField(default = {
         "lat": 0,
         "long": 0,
@@ -22,7 +24,7 @@ class CameraInfos(Document):
     status = BooleanField(required=True, default=False)
     roi = ListField(ListField(IntField(), max_length=2), default=[], required=True)
     lp_roi = ListField(ListField(IntField(), max_length=2), default=[])
-    direction_vector = ListField(ListField(IntField()), max_length=2, default=[0,0], required=True)
+    direction_vector = ListField(IntField(), max_length=2, default=[0,0], required=True)
     updated_at = DateTimeField(default=datetime.now)
     created_at = DateTimeField(default=datetime.now)
     def save(self, *args, **kwargs):

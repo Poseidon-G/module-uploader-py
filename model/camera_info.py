@@ -37,5 +37,6 @@ class CameraInfos(Document):
         try:
             result: CameraInfos = CameraInfos.objects(camera_alias=camera_alias).first()
             return result
-        except Exception:
+        except Exception as e:
+            print(e)
             return None

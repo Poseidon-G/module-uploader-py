@@ -23,7 +23,7 @@ class UploadImage:
 class UploadVehicleInfo:
     vehicle_images: List[UploadImage]
     lp_images: List[UploadImage]
-    lp_labels: Dict[str, float]
+    lp_labels: List[Dict] # [{label: str, score: float}]
     record_time: datetime
     start_frame: int
     end_frame: int

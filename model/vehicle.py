@@ -4,6 +4,11 @@ from mongoengine.fields import EnumField, LongField, ListField,StringField, Date
 from bson.objectid import ObjectId
 from datetime import datetime
 from enum import Enum
+import time
+
+def convertLocalTimeToUTCTime(local_time):
+    epochSecond = time.mktime(local_time.timetuple())
+    return datetime.utcfromtimestamp(epochSecond)
 
 class VehicleTypes(Enum):
     CAR = "Car"
@@ -30,6 +35,9 @@ class Vehicles(Document):
     updated_at = DateTimeField(default=datetime.now)
     created_at = DateTimeField(default=datetime.now)
     def save(self, *args, **kwargs):
+        if self.record_time:
+            self.record_time = convertLocalTimeToUTCTime(self.record_time)
+            
         if not self.created_at:
             self.created_at = datetime.now()
         self.updated_at = datetime.now()

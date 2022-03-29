@@ -1,6 +1,6 @@
 from email.policy import default
 from mongoengine.document import Document
-from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField, IntField
+from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField, ObjectIdField
 from bson.objectid import ObjectId
 from datetime import datetime
 from enum import Enum
@@ -21,9 +21,9 @@ class Vehicles(Document):
     camera_id = StringField(required = True)
     video_id = StringField(required = True)
 
-    vehicle_image_ids = ListField(StringField(), default = list)
-    plate_image_ids = ListField(StringField(), default = list)
-    preview_image_id = StringField(required = True)
+    vehicle_image_ids = ListField(ObjectIdField(), default = list)
+    plate_image_ids = ListField(ObjectIdField(), default = list)
+    preview_image_id = ObjectIdField(required = True)
     lp_labels = ListField(DictField(), default=[], requrired=True) # [{label: str, score:float}]
     vehicle_type = EnumField(VehicleTypes,required = True)
     

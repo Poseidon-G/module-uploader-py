@@ -28,16 +28,16 @@ def save_image(image_b64: str, link_folder: str):
             format = response_image["format"]
         ).save()
         
-        return str(image_data.uuid)
+        return image_data._id
     except Exception as exp: 
         print(exp.with_traceback())
         return None
 
-def save_video_get_uuid(video_record: RecordVideos):
+def save_video_get_id(video_record: RecordVideos):
     try:        
         video_record.validate()
         video_data:RecordVideos = video_record.save()
-        return str(video_data.uuid)
+        return video_data._id
     except ValidationError:
         raise Exception("Recorded video data format is incorrect")
 
@@ -55,7 +55,7 @@ def save_vehicle_info(vehicle_info: UploadVehicleInfo, video_id: str):
         preview_image_id  = save_image(vehicle_info.preview_image.jpeg_base64, vehicle_info.preview_image.folder)
         
         data = Vehicles(
-            camera_uuid = vehicle_info.camera_id,
+            camera_id = vehicle_info.camera_id,
             vehicle_image_ids = vehicle_image_ids,
             plate_image_ids = lp_image_ids,
             video_id = video_id,
@@ -75,10 +75,10 @@ def save_vehicle_info(vehicle_info: UploadVehicleInfo, video_id: str):
 
 def upload_list_vehicle_detect(list_upload: Dict[int, UploadVehicleInfo], record_video: RecordVideos):
     try:
-        video_uuid = save_video_get_uuid(record_video)
+        video_id = save_video_get_id(record_video)
 
         for vehicle_id in list_upload.keys():
-            flag = save_vehicle_info(list_upload[vehicle_id], video_uuid)
+            flag = save_vehicle_info(list_upload[vehicle_id], video_id)
             if not flag:
                 print(f"Upload #{vehicle_id} vehicle info failed!")
         return True

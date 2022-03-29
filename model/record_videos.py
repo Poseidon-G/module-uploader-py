@@ -1,10 +1,8 @@
 from mongoengine.document import Document
 from mongoengine.fields import StringField, DateTimeField, IntField
-from bson.objectid import ObjectId
 from datetime import datetime
 
 class RecordVideos(Document):
-    uuid = StringField(required = True, default = str(ObjectId()))
     video_url = StringField(required = True)
     width = IntField(required = True)
     height = IntField(required = True)

@@ -4,7 +4,6 @@ from bson.objectid import ObjectId
 from datetime import datetime
 
 class Images(Document):
-    uuid = StringField(required = True, default = str(ObjectId()))
     asset_id = StringField(required = True)
     public_id = StringField(required = True)
     url = StringField(required = True)

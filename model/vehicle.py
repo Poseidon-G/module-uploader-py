@@ -18,8 +18,7 @@ class VehicleTypes(Enum):
     BICYCLE = "Bicycle"
 
 class Vehicles(Document):
-    uuid = StringField(required = True, default = str(ObjectId()))
-    camera_uuid = StringField(required = True)
+    camera_id = StringField(required = True)
     video_id = StringField(required = True)
 
     vehicle_image_ids = ListField(StringField(), default = list)

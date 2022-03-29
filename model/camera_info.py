@@ -11,7 +11,6 @@ class StreamingTypes(Enum):
     RTSP = "RTSP"
 
 class CameraInfos(Document):
-    uuid = StringField(required=True, default=str(ObjectId()))
     camera_name = StringField(required=True)
     camera_alias = StringField(required=True)
     camera_url = StringField(required=True)

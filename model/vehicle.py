@@ -1,10 +1,13 @@
 from email.policy import default
 from mongoengine.document import Document
-from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField, ObjectIdField
+from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField
+from mongoengine.errors import ValidationError
 from bson.objectid import ObjectId
 from datetime import datetime
 from enum import Enum
 import time
+
+_MAX_SIZE_IMAGES = 2
 
 def convertLocalTimeToUTCTime(local_time):
     epochSecond = time.mktime(local_time.timetuple())
@@ -17,13 +20,17 @@ class VehicleTypes(Enum):
     TRUCK = "Truck"
     BICYCLE = "Bicycle"
 
+def RetrictLengthMaxLengthImage(list_image):
+    if(len(list_image) > _MAX_SIZE_IMAGES):
+        raise ValidationError("List images exceed max size: ", _MAX_SIZE_IMAGES) 
+
 class Vehicles(Document):
     camera_id = StringField(required = True)
     video_id = StringField(required = True)
 
-    vehicle_image_ids = ListField(ObjectIdField(), default = list)
-    plate_image_ids = ListField(ObjectIdField(), default = list)
-    preview_image_id = ObjectIdField(required = True)
+    vehicle_images= ListField(DictField(), required = True, validation = RetrictLengthMaxLengthImage) #[ImageInfo]
+    plate_images = ListField(DictField(), default = [], validation = RetrictLengthMaxLengthImage) #[ImageInfo]
+    preview_image = DictField(required = True) #ImageInfo
     lp_labels = ListField(DictField(), default=[], requrired=True) # [{label: str, score:float}]
     vehicle_type = EnumField(VehicleTypes,required = True)
     

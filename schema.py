@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from os import PathLike
 from datetime import datetime
+import string
 from typing import List, Dict
 from numpy import ndarray
 from base64 import b64encode
@@ -30,4 +31,22 @@ class UploadVehicleInfo:
     preview_image: UploadImage
     camera_id: str
     type: VehicleTypes
-    
+
+@dataclass
+class ImageInfo:
+    asset_id: str
+    public_id: str
+    url: str
+    secure_url: str
+    format: str
+    created_at: datetime
+
+    def convertDictImageInfo(self):
+        return {
+            "asset_id": self.asset_id,
+            "public_id": self.public_id,
+            "url": self.url,
+            "secure_url": self.secure_url,
+            "format": self.format,
+            "created_at": self.created_at,
+        }

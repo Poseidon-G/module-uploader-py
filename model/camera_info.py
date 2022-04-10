@@ -35,10 +35,10 @@ class CameraInfos(Document):
     @staticmethod
     def get_by_alias(camera_alias: str):
         try:
-            camera_info:CameraInfos = CameraInfos.objects(camera_alias=camera_alias).first()
-            # if(camera_info and camera_info.streaming_type == "YOUTUBE")
-            return camera_info
-        except Exception:
+            result: CameraInfos = CameraInfos.objects(camera_alias=camera_alias).first()
+            return result
+        except Exception as e:
+            print(e)
             return None
 
 

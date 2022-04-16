@@ -1,5 +1,4 @@
 from email.policy import default
-from unicodedata import name
 from mongoengine.document import Document
 from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField
 from mongoengine.errors import ValidationError
@@ -7,6 +6,8 @@ from bson.objectid import ObjectId
 from datetime import datetime
 from enum import Enum
 import time
+
+from numpy import require
 
 _MAX_SIZE_IMAGES = 2
 
@@ -25,10 +26,8 @@ def RetrictLengthMaxLengthImage(list_image):
     if(len(list_image) > _MAX_SIZE_IMAGES):
         raise ValidationError("List images exceed max size: ", _MAX_SIZE_IMAGES) 
 
-class NameCollection:
-    name = str
-
-class Vehicles(Document):
+class Schedule(Document):
+    meta = DictField(required = True)
     camera_id = StringField(required = True)
     video_id = StringField(required = True)
 
@@ -51,4 +50,4 @@ class Vehicles(Document):
         if not self.created_at:
             self.created_at = datetime.now()
         self.updated_at = datetime.now()
-        return super(Vehicles, self).save(*args, **kwargs)
+        return super(Schedule, self).save(*args, **kwargs)

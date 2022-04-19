@@ -2,11 +2,17 @@ from msilib.schema import Error
 from time import time
 from mongoengine import connect
 from mongoengine.errors import ValidationError
-from db_uploader.schema.schedule import UploadVehicleInfo, ImageInfo, ScheduleVehicleSchema
+from db_uploader.schema import UploadVehicleInfo, ImageInfo, ScheduleVehicleSchema
 import pymongo
-from db_uploader.config import MONGODB_URI, DB_NAME
+from db_uploader.config import MONGODB_URI, DB_NAME, MONGODB_TEST_DB_URI
+#conn for pymongo
 conn = pymongo.MongoClient(MONGODB_URI)
 database = conn[DB_NAME]
+
+#conn for mongo engine 
+
+connect(host=MONGODB_TEST_DB_URI)
+
 from validation.schedule_validation import ScheduleVehicleValidation
 from jsonschema import validate
 from datetime import datetime
@@ -15,7 +21,6 @@ from db_uploader.model.vehicle import convertLocalTimeToUTCTime
 from typing import Dict, List
 
 from db_uploader import cloudinary_upload
-from db_uploader.schema.schedule import ImageInfo
 from db_uploader.model.images import Images
 from db_uploader.model.record_videos import RecordVideos
 
@@ -87,7 +92,7 @@ def save_vehicle_info(vehicle_info: UploadVehicleInfo, video_id: str):
             end_frame = vehicle_info.end_frame,
             lp_labels = vehicle_info.lp_labels,
             preview_image = preview_image,
-            vehicle_type = vehicle_info.type,
+            vehicle_type = vehicle_info.type.value,
         )
 
         new_vehicle = data.asDict()
@@ -100,17 +105,20 @@ def save_vehicle_info(vehicle_info: UploadVehicleInfo, video_id: str):
 
         #save info to collection
         database[schedule_vehicle_collection_name].insert_one(new_vehicle)
+        return True
     except ValidationError as e:
+        print(e)
         return False
 
-# def upload_detected_vehicles(vehicle_data: List[UploadVehicleInfo], record_video: RecordVideos):
-#     try:
-#         video_id = save_video_get_id(record_video)
+def upload_detected_vehicles(vehicle_data: List[UploadVehicleInfo], record_video: RecordVideos):
+    try:
+        video_id = str(save_video_get_id(record_video))
 
-#         for idx, data in enumerate(vehicle_data):
-#             flag = save_vehicle_info(data, video_id)
-#             if not flag:
-#                 print(f"Upload vehicle #{idx} failed!")
-#         return True
-#     except:
-#         return False
+        for idx, data in enumerate(vehicle_data):
+            flag = save_vehicle_info(data, video_id)
+            if not flag:
+                print(f"Upload vehicle #{idx} failed!")
+        return True
+    except Exception as e:
+        print(e)
+        return False

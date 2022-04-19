@@ -1,7 +1,7 @@
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from db_uploader.schema.schedule import PlateInfo
+from db_uploader.schema import PlateInfo
 
 
 ScheduleVehicleValidation = {
@@ -43,7 +43,7 @@ ScheduleVehicleValidation = {
         }
     },
     "type": "object",
-    "required": ["camera_id", "video_id"],
+    "required": ["camera_id", "video_id", "vehicle_type", "start_frame", "end_frame","record_time"],
     "properties": {
         "camera_id": {
             "type": "string"

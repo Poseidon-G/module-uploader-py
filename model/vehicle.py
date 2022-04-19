@@ -1,5 +1,4 @@
 from email.policy import default
-from unicodedata import name
 from mongoengine.document import Document
 from mongoengine.fields import EnumField, LongField, ListField,StringField, DateTimeField, DictField
 from mongoengine.errors import ValidationError
@@ -28,7 +27,8 @@ def RetrictLengthMaxLengthImage(list_image):
 class NameCollection:
     name = str
 
-class Vehicles(Document):
+class Vehicles(Document, NameCollection):
+    meta = { "collection": NameCollection.name}
     camera_id = StringField(required = True)
     video_id = StringField(required = True)
 

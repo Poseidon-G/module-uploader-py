@@ -60,19 +60,19 @@
 # )
 
 
-
-
 # save_vehicle_info(uploadInfo, "12234555")
 
+from uploader import upload_detected_vehicles
 import pickle
-file = open("./db_uploader/data_test/congtruongnguyenhue_02h19m47s_recordvideo.pkl",'rb')
-file2 = open("./db_uploader/data_test/congtruongnguyenhue_02h19m47s_vehicleinfos.pkl",'rb')
+file = open(
+    "./db_uploader/data_test/congtruongnguyenhue_02h19m47s_recordvideo.pkl", 'rb')
+file2 = open(
+    "./db_uploader/data_test/congtruongnguyenhue_02h19m47s_vehicleinfos.pkl", 'rb')
 data_video_record = pickle.load(file)
 data_vehicle_infos = pickle.load(file2)
 
 # print(data_vehicle_infos[0])
 
-from uploader import upload_detected_vehicles
 
 upload_detected_vehicles(data_vehicle_infos, data_video_record)
 # from db_uploader.schema.schedule import UploadVehicleInfo, UploadVideoInfo

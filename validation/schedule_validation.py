@@ -3,88 +3,92 @@ from jsonschema.exceptions import ValidationError
 
 from db_uploader.schema import PlateInfo
 
+VehicleValidation = {
+    "$jsonSchema": {
+        "definitions": {
+            "ImageInfo": {
+                "bsonType": "object",
+                "properties": {
+                    "asset_id": {
+                        "bsonType": "string"
+                    },
+                    "public_id": {
+                        "bsonType": "string"
+                    },
+                    "url": {
+                        "bsonType": "string"
+                    },
+                    "secure_url": {
+                        "bsonType": "string"
+                    },
+                    "format": {
+                        "bsonType": "string"
+                    },
+                    "created_at": {
+                        "bsonType": "date",
+                    }
 
-ScheduleVehicleValidation = {
-    "definitions": {
-        "ImageInfo": {
-            "type": "object",
-            "properties": {
-                "asset_id": {
-                    "type": "string"
-                },
-                "public_id": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                },
-                "secure_url": {
-                    "type": "string"
-                },
-                "format": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string",
-                    "format": "date-time"
+                }
+            },
+            "PlateInfo": {
+                "bsonType": "object",
+                "properties": {
+                    "label": {
+                        "bsonType": "string"
+                    },
+                    "score": {
+                        "bsonType": "number"
+                    }
                 }
             }
         },
-        "PlateInfo": {
-             "type": "object",
-              "properties": {
-                  "label": {
-                      "type": "string"
-                  },
-                  "score": {
-                      "type": "number"
-                  }
-              }
+        "bsonType": "object",
+        "required": ["recordtime", "camera_id", "video_id", "preview_image", "start_frame", "end_frame"],
+        "properties": {
+            "camera_id": {
+                "bsonType": "string",
+                "description": "must be a string of objectId and is required"
+            },
+            "video_id": {
+                "bsonType": "string",
+                "description": "must be a string of objectId and is required"
+            },
+            "preview_image": {
+                "$ref": "#/definitions/ImageInfo",
+                "description": "must be a object ImageInfo"
+            },
+            "lp_labels":  {
+                "bsonType": "array",
+                "items": {
+                    "$ref": "#/definitions/PlateInfo"
+                },
+                "description": "must be a array object PlateInfo"
+            },
+            "vehicle_type": {
+                "bsonType": "string",
+                "enum": ["Car", "Motorcycle", "Bus", "Truck", "Bicycle"]
+            },
+            "start_frame": {
+                "bsonType": "number"
+            },
+            "end_frame": {
+                "bsonType": "number"
+            },
+            "vehicle_images": {
+                "bsonType": "array",
+                "items": {
+                    "$ref": "#/definitions/ImageInfo"
+                },
+                "description": "must be a array object ImageInfo"
+            },
+            "plate_images": {
+                "bsonType": "array",
+                "items": {
+                    "$ref": "#/definitions/ImageInfo"
+                },
+                "description": "must be a array object ImageInfo"
+
+            },
         }
-    },
-    "type": "object",
-    "required": ["camera_id", "video_id", "vehicle_type", "start_frame", "end_frame","record_time"],
-    "properties": {
-        "camera_id": {
-            "type": "string"
-        },
-        "video_id": {
-            "type": "string"
-        },
-        "vehicle_images": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/ImageInfo"
-            }
-        },
-        "plate_images": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/ImageInfo"
-            }
-        },
-        "preview_image": {
-            "$ref": "#/definitions/ImageInfo"
-        },
-        "lp_labels": {
-            "type": "array",
-              "items": {
-                  "$ref": "#/definitions/PlateInfo"
-              }
-        },
-        "vehicle_type": {
-            "type": "string",
-            "enum": ["Car", "Motorcycle", "Bus", "Truck", "Bicycle"]
-        },
-        "start_frame": {
-            "type": "integer"
-        },
-        "end_frame": {
-            "type": "integer"
-        },
-        "record_time": {
-            "type": "string",
-            "format": "date-time"
-        },
     }
 }

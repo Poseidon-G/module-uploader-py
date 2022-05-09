@@ -4,6 +4,7 @@ from os import PathLike
 from datetime import datetime
 import string
 from typing import List, Dict
+from venv import create
 from numpy import integer, ndarray
 from base64 import b64encode
 from cv2 import imencode
@@ -11,11 +12,11 @@ from enum import Enum
 
 
 class VehicleTypes(Enum):
-    CAR = "Car"
-    MOTORCYCLE = "Motorcycle"
-    BUS = "Bus"
-    TRUCK = "Truck"
-    BICYCLE = "Bicycle"
+  CAR = "Car"
+  MOTORCYCLE = "Motorcycle"
+  BUS = "Bus"
+  TRUCK = "Truck"
+  BICYCLE = "Bicycle"
 
 
 _JPG_BASE64_HEADER = "data:image/jpeg;base64,"
@@ -49,8 +50,10 @@ class ImageInfo:
 class PlateInfo:
   label: str
   score: float
+
   def asDict(self):
     return vars(self)
+
 
 @dataclass
 class UploadVehicleInfo:
@@ -66,19 +69,23 @@ class UploadVehicleInfo:
 
 
 @dataclass
-class ScheduleVehicleSchema:
+class VehicleSchema:
   record_time: datetime
   start_frame: int
   end_frame: int
   camera_id: str
   video_id: str
   vehicle_type: VehicleTypes
-  preview_image: Dict #ImageInfo as dict
-  vehicle_images: List[Dict] = field(default_factory=list) #ImageInfo as dict
-  plate_images: List[Dict] = field(default_factory=list) #ImageInfo as dict
-  lp_labels: List[Dict] = field(default_factory=list)  #PlateInfo as dict
+  preview_image: Dict  # ImageInfo as dict
+  vehicle_images: List[Dict] = field(default_factory=list)  # ImageInfo as dict
+  plate_images: List[Dict] = field(default_factory=list)  # ImageInfo as dict
+  lp_labels: List[Dict] = field(default_factory=list)  # PlateInfo as dict
+  created_at: datetime = datetime.now()
+  updated_at: datetime = datetime.now()
+
   def asDict(self):
     return vars(self)
+
 
 @dataclass
 class UploadVideoInfo:
@@ -87,6 +94,6 @@ class UploadVideoInfo:
   height = integer
   fps = integer
   num_frames = integer
-  camera_id =  str
+  camera_id = str
   created_at = datetime
   updated_at = datetime

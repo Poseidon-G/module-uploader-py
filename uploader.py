@@ -1,17 +1,18 @@
-from db_uploader.model.record_videos import RecordVideos
-from db_uploader.model.images import Images
-from db_uploader import cloudinary_upload
 from typing import Dict, List
-from db_uploader.utils import convertLocalTimeToUTCTime, datetime_from_utc_to_local, generate_collection_name_from_time
+
+import pymongo
 from jsonschema import validate
-from validation.schedule_validation import VehicleValidation
-from msilib.schema import Error
-from time import time
 from mongoengine import connect
 from mongoengine.errors import ValidationError
-from db_uploader.schema import UploadVehicleInfo, ImageInfo, VehicleSchema
-import pymongo
-from db_uploader.config import MONGODB_URI, DB_NAME, MONGODB_TEST_DB_URI
+
+from db_uploader import cloudinary_upload
+from db_uploader.config import DB_NAME, MONGODB_TEST_DB_URI, MONGODB_URI
+from db_uploader.model.images import Images
+from db_uploader.model.record_videos import RecordVideos
+from db_uploader.schema import ImageInfo, UploadVehicleInfo, VehicleSchema
+from db_uploader.utils import generate_collection_name_from_time
+from db_uploader.validation.schedule_validation import VehicleValidation
+
 # conn for pymongo
 conn = pymongo.MongoClient(MONGODB_URI)
 database = conn[DB_NAME]

@@ -2,3 +2,5 @@ __pycache__
 venv
 config.py
 *.test.py
+data_test
+*test.py
